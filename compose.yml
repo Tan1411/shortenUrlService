@@ -1,0 +1,26 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    tty: true
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/rails
+    networks:
+      - shorten-service-network
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+    volumes:
+      - pgdata:/var/lib/postgresql
+    networks:
+      - shorten-service-network
+volumes:
+  pgdata:
+networks:
+  shorten-service-network:
