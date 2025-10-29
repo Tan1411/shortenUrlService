@@ -30,6 +30,7 @@ The service uses **Sqids** (Secure Quick IDs) library to generate unique short c
    # Combines URL length and ID to create unique input
    encoded_token = SQIDS.encode([length, id])
    ```
+   *See implementation: [`app/services/shorten_url_service.rb`](app/services/shorten_url_service.rb)*
 
 3. **Why This Approach**:
    - **Uniqueness**: Combining length + ID ensures no two URLs produce the same code
@@ -118,6 +119,8 @@ docker compose exec app bundle exec rspec
 
 The service is deployed and available for testing at:
 **https://shorten-url-service.onrender.com/**
+
+*Note: The free instance will spin down with inactivity, which can delay requests by 50 seconds or more.*
 
 ### Available Actions:
 - **Encode**: `POST /encode` - Convert long URLs to short codes

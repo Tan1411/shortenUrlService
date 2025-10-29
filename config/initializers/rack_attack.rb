@@ -1,13 +1,23 @@
 class Rack::Attack
+  # use redis for cache store in production
+  if Rails.env.production?
+    redis_url = ENV.fetch("REDIS_URL")
+    self.cache.store = Rack::Attack::StoreProxy::RedisStoreProxy.new(Redis.new(url: redis_url))
+  else
+    self.cache.store = ActiveSupport::Cache::MemoryStore.new
+  end
+
+  # for development and test environment
+  self.
   cache.store = ActiveSupport::Cache::MemoryStore.new
 
   throttle('req/ip', limit: 200, period: 5.minutes) do |req|
-    req.ip
+    true
   end
 
   blocklist('block_bad_ips') do |req|
     Rack::Attack::Allow2Ban.filter(req.ip, maxretry: 1000, findtime: 30.minutes, bantime: 12.hours) do
-      req.ip
+      true
     end
   end
 
